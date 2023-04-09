@@ -38,6 +38,12 @@ bot.command('update', async (ctx: Context) => {
     await scheduledJob(ctx.message.chat.id);
 })
 
+bot.action('trigger_update', async (ctx: Context) => {
+    await ctx.reply('Alright, I\'m on it! 🚀')
+
+    // TODO: launch the CSV download from the internet banking
+})
+
 bot.launch({}).catch((err: Error) => console.error(err));
 
 // Enable graceful stop
@@ -51,8 +57,15 @@ async function scheduledJob(chatId: number | null) {
             return;
         }
         console.log(`Scheduled job for chat ID: ${chatId}`);
-        await bot.telegram.sendMessage(chatId, "(1/5) Commencing update... 🚀")
-
+        await bot.telegram.sendMessage(chatId, "About to commence an update... 🍓 Should I proceed?", {
+            reply_markup: {
+                inline_keyboard: [
+                    [
+                        {text: "Go on", callback_data: "trigger_update"},
+                    ]
+                ]
+            }
+        })
     } catch (error) {
         console.error(error);
     }
