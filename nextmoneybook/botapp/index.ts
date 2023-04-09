@@ -1,5 +1,6 @@
 require('dotenv').config()
 import {Context} from "telegraf";
+import bankUpdate from "./bank_update"
 
 const schedule = require('node-schedule');
 const {Telegraf} = require('telegraf');
@@ -38,10 +39,37 @@ bot.command('update', async (ctx: Context) => {
     await scheduledJob(ctx.message.chat.id);
 })
 
+let IS_TRIGGERING_UPDATE = false
 bot.action('trigger_update', async (ctx: Context) => {
-    await ctx.reply('Alright, I\'m on it! 🚀')
+    if (IS_TRIGGERING_UPDATE) {
+        return
+    }
 
-    // TODO: launch the CSV download from the internet banking
+    // first, remove the button from the message so user cannot trigger this again by accident
+    if (ctx.callbackQuery?.message) {
+        await bot.telegram.editMessageReplyMarkup(
+            ctx.callbackQuery.message.chat.id,
+            ctx.callbackQuery.message.message_id,
+            undefined,
+            undefined
+        );
+    }
+
+    IS_TRIGGERING_UPDATE = true
+    await ctx.reply('(1/4) Alright, I\'m on it! 🚀')
+
+    await bankUpdate(
+        () => {
+            ctx.reply('(2/4) I\'ve triggered a login to your internet banking. 💰')
+        },
+        () => {
+            ctx.reply('(3/4) Download is done. Logging out of the bank. 🏦')
+        }
+    )
+
+    // TODO: parse the stuff and give overall status
+    ctx.reply('(4/4) TODO: status. ⚠️')
+    IS_TRIGGERING_UPDATE = false
 })
 
 bot.launch({}).catch((err: Error) => console.error(err));
@@ -57,7 +85,7 @@ async function scheduledJob(chatId: number | null) {
             return;
         }
         console.log(`Scheduled job for chat ID: ${chatId}`);
-        await bot.telegram.sendMessage(chatId, "About to commence an update... 🍓 Should I proceed?", {
+        const message = await bot.telegram.sendMessage(chatId, "About to commence an update... 🍓 Should I proceed?", {
             reply_markup: {
                 inline_keyboard: [
                     [
@@ -66,13 +94,15 @@ async function scheduledJob(chatId: number | null) {
                 ]
             }
         })
+
+        console.log(`message`, message);
     } catch (error) {
         console.error(error);
     }
 }
 
-// const SCHEDULE = '* * 12 * *'
-const SCHEDULE = '* */1 * * *'
+const SCHEDULE = '* * 12 * *'
+// const SCHEDULE = '* */1 * * *'
 
 schedule.scheduleJob(SCHEDULE, function () {
     void scheduledJob(BOT_OWNER_CHAT_ID)
