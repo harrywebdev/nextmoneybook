@@ -99,8 +99,8 @@ async function scheduledJob(chatId: number | null) {
     }
 }
 
-// const SCHEDULE = '* * 12 * *'
-const SCHEDULE = '* */1 * * *'
+const SCHEDULE = '* * 12 * *'
+// const SCHEDULE = '* */1 * * *'
 
 schedule.scheduleJob(SCHEDULE, function () {
     void scheduledJob(BOT_OWNER_CHAT_ID)
