@@ -51,6 +51,7 @@ async function scheduledJob(chatId: number | null) {
             return;
         }
         console.log(`Scheduled job for chat ID: ${chatId}`);
+        await bot.telegram.sendMessage(chatId, "(1/5) Commencing update... 🚀")
 
     } catch (error) {
         console.error(error);
