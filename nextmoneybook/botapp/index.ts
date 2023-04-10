@@ -47,12 +47,17 @@ bot.action('trigger_update', async (ctx: Context) => {
 
     // first, remove the button from the message so user cannot trigger this again by accident
     if (ctx.callbackQuery?.message) {
-        await bot.telegram.editMessageReplyMarkup(
-            ctx.callbackQuery.message.chat.id,
-            ctx.callbackQuery.message.message_id,
-            undefined,
-            undefined
-        );
+        try {
+            await bot.telegram.editMessageReplyMarkup(
+                ctx.callbackQuery.message.chat.id,
+                ctx.callbackQuery.message.message_id,
+                undefined,
+                undefined
+            );
+        } catch (error) {
+            // can ignore it probably
+            console.error(error);
+        }
     }
 
     IS_TRIGGERING_UPDATE = true
