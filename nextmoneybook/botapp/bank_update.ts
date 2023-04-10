@@ -13,7 +13,8 @@ const bankUpdate = async (
         await loginToInternetBanking(page, sendMessage);
 
         // needs a break to work
-        await new Promise(r => setTimeout(r, 1000));
+        await new Promise(r => setTimeout(r, 2000));
+        // await page.screenshot({path: 'debug2.png'});
 
         // download CSV for Current Account
         await downloadCurrentAccountCsv(page, sendMessage);

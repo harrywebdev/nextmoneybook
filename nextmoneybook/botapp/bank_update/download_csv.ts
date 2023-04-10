@@ -7,13 +7,6 @@ export default async function downloadCsv(
     filePrefix: string,
     sendMessage: (message: string) => void
 ) {
-    // wait for transactions screen
-    const transactionsSelector = 'a[xid=exportToCSVButton]'
-    await page.waitForSelector(transactionsSelector);
-
-    // await new Promise(r => setTimeout(r, 100));
-    // await page.screenshot({path: 'debug7.png'});
-
     // intercept the CSV
     // downloads something like
     // https://online.rb.cz/ibs/download/r-G2zcEH1EBhbwCZxBNOCg==/content
@@ -54,6 +47,15 @@ export default async function downloadCsv(
 
     page.on('request', requestHandler)
     page.on('response', responseHandler);
+
+    await new Promise(r => setTimeout(r, 500));
+
+    // wait for transactions screen
+    const transactionsSelector = 'a[xid=exportToCSVButton]'
+    await page.waitForSelector(transactionsSelector, {timeout: 5000});
+
+    // await new Promise(r => setTimeout(r, 100));
+    // await page.screenshot({path: 'debug4.png'});
 
     // click the download CSV button - click it twice to go through the popup
     await page.click(transactionsSelector);
