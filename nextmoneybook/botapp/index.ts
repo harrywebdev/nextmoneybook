@@ -56,15 +56,12 @@ bot.action('trigger_update', async (ctx: Context) => {
     }
 
     IS_TRIGGERING_UPDATE = true
-    await ctx.reply('(1/4) Alright, I\'m on it! 🚀')
+    await ctx.reply('Alright, I\'m on it! 🚀')
 
     await bankUpdate(
-        () => {
-            ctx.reply('(2/4) I\'ve triggered a login to your internet banking. 💰')
+        (message) => {
+            ctx.reply(message)
         },
-        () => {
-            ctx.reply('(3/4) Download is done. Logging out of the bank. 🏦')
-        }
     )
 
     // TODO: parse the stuff and give overall status
@@ -85,7 +82,7 @@ async function scheduledJob(chatId: number | null) {
             return;
         }
         console.log(`Scheduled job for chat ID: ${chatId}`);
-        const message = await bot.telegram.sendMessage(chatId, "About to commence an update... 🍓 Should I proceed?", {
+        await bot.telegram.sendMessage(chatId, "About to commence an update... 🍓 Should I proceed?", {
             reply_markup: {
                 inline_keyboard: [
                     [
