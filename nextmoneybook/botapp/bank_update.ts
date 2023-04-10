@@ -29,6 +29,8 @@ const bankUpdate = async (
     } catch (error) {
         sendMessage('Oops, something gone wrong 🚫. Exiting');
 
+        console.error(error);
+
         await browser.close();
     }
 };

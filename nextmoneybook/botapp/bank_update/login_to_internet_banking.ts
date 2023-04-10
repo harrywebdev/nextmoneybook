@@ -40,7 +40,7 @@ export default async function loginToInternetBanking(
     await page.waitForSelector(transactionsHistorySelector);
 
     // wait until the page fully loads
-    await new Promise(r => setTimeout(r, 1500));
+    await new Promise(r => setTimeout(r, 500));
 
     // await page.screenshot({path: 'debug3.png'});
 

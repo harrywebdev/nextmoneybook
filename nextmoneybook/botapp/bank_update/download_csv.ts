@@ -11,7 +11,8 @@ export default async function downloadCsv(
     const transactionsSelector = 'a[xid=exportToCSVButton]'
     await page.waitForSelector(transactionsSelector);
 
-    await new Promise(r => setTimeout(r, 100));
+    // await new Promise(r => setTimeout(r, 100));
+    // await page.screenshot({path: 'debug7.png'});
 
     // intercept the CSV
     // downloads something like
@@ -61,9 +62,13 @@ export default async function downloadCsv(
         response.url().indexOf('download') > 0 && response.url().endsWith('content')
     );
 
-    // wait for processing
-    await new Promise(r => setTimeout(r, 100));
+    // wait for processing - to be safe
+    await new Promise(r => setTimeout(r, 500));
 
+    // turn off request interceiption
+    await page.setRequestInterception(false);
+
+    // all should be done now
     page.off('request', requestHandler)
     page.off('response', responseHandler);
 

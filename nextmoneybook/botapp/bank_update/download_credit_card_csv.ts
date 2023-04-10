@@ -5,22 +5,27 @@ export default async function downloadCreditCardCsv(
     page: Page,
     sendMessage: (message: string) => void
 ): Promise<Page> {
-    // go to cards dashboard
-    await page.click('a[xid=menuCards]')
+    // go to dashboard
+    await page.goto('https://online.rb.cz/web/#/home');
 
-    // wait for list of cards screen
-    const cardDetailSelector = 'button[creditCard-ZTFlYWVkYTFhOTQ2MzlhMDc1NTRlNGM0YWVmMGRiYzU2YjM5ZTYyNjFmMDc3MTg5NGM2ZTQyNDc1OWVlNTlkZC41MzE1MzNYWFhYWFg4MTczLkMuOTk5NTA4-detail]'
+    await new Promise(r => setTimeout(r, 100));
+
+    // await new Promise(r => setTimeout(r, 100));
+    // await page.screenshot({path: 'debug2.png'});
+    // await new Promise(r => setTimeout(r, 1000));
+    // await page.screenshot({path: 'debug2a.png'});
+
+    // go to card history
+    const cardDetailSelector = '[xid=cardsWidget] button.submit'
     await page.waitForSelector(cardDetailSelector);
 
     // await new Promise(r => setTimeout(r, 100));
+    // await page.screenshot({path: 'debug3.png'});
+
     await page.click(cardDetailSelector);
 
-    // wait for list of cards screen
-    const cardHistorySelector = 'a[xid=toCardTransactionsLinkCredit]'
-    await page.waitForSelector(cardHistorySelector);
-
     // await new Promise(r => setTimeout(r, 100));
-    await page.click(cardHistorySelector);
+    // await page.screenshot({path: 'debug6.png'});
 
     await new Promise(r => setTimeout(r, 100));
 
