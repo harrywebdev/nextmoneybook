@@ -1,7 +1,7 @@
 import {Context, Telegraf} from "telegraf";
 import bankUpdate from "../bank_update";
 
-export default function updateCommand(bot: Telegraf) {
+export default function updateCommand(bot: Telegraf, authCheck: (ctx: Context, cb: () => void) => void) {
     let IS_TRIGGERING_UPDATE = false
 
     const updateFromBank = async (ctx: Context) => {
@@ -25,26 +25,30 @@ export default function updateCommand(bot: Telegraf) {
 
     // trigger update manually
     bot.command('update', async (ctx: Context) => {
-        await updateFromBank(ctx);
+        authCheck(ctx, () => {
+            updateFromBank(ctx);
+        })
     })
 
     // action triggered by scheduler
     bot.action('trigger_update', async (ctx: Context) => {
-        // first, remove the button from the message so user cannot trigger this again by accident
-        if (ctx.callbackQuery?.message) {
-            try {
-                await bot.telegram.editMessageReplyMarkup(
-                    ctx.callbackQuery.message.chat.id,
-                    ctx.callbackQuery.message.message_id,
-                    undefined,
-                    undefined
-                );
-            } catch (error) {
-                // can ignore it probably
-                console.error(error);
+        authCheck(ctx, async () => {
+            // first, remove the button from the message so user cannot trigger this again by accident
+            if (ctx.callbackQuery?.message) {
+                try {
+                    await bot.telegram.editMessageReplyMarkup(
+                        ctx.callbackQuery.message.chat.id,
+                        ctx.callbackQuery.message.message_id,
+                        undefined,
+                        undefined
+                    );
+                } catch (error) {
+                    // can ignore it probably
+                    console.error(error);
+                }
             }
-        }
 
-        await updateFromBank(ctx);
+            await updateFromBank(ctx);
+        })
     })
 }

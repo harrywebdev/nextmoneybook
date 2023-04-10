@@ -4,8 +4,8 @@ require('dotenv').config()
 const schedule = require('node-schedule');
 
 export default function scheduler(bot: Telegraf,) {
-    // const SCHEDULE = '* * 12 * *'
-    const SCHEDULE = '* */1 * * *'
+    const SCHEDULE = '* * 12 * *'
+    // const SCHEDULE = '* */1 * * *'
 
     schedule.scheduleJob(SCHEDULE, function () {
         void scheduledJob()

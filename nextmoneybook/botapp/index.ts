@@ -2,11 +2,9 @@ import scheduler from "./scheduler";
 
 require('dotenv').config()
 import {Context} from "telegraf";
-import bankUpdate from "./bank_update"
 import updateCommand from "./commands/update";
 
 const {Telegraf} = require('telegraf');
-const {message} = require('telegraf/filters');
 
 const authCheck = (ctx: Context, cb: () => void) => {
     if (ctx.message?.from?.id === Number(process.env.BOT_OWNER_ID)) {
@@ -23,13 +21,15 @@ bot.start((ctx: Context) => {
 });
 
 bot.help((ctx: Context) => {
-    const commands = [
-        "/status", "/update"
-    ]
-    ctx.reply("Available commands:\n " + commands.join("\n"))
+    authCheck(ctx, () => {
+        const commands = [
+            "/status", "/update"
+        ]
+        ctx.reply("Available commands:\n " + commands.join("\n"))
+    })
 });
 
-updateCommand(bot);
+updateCommand(bot, authCheck);
 
 bot.launch({}).catch((err: Error) => console.error(err));
 
