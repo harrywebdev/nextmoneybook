@@ -36,3 +36,9 @@ model Note {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String
 }
+
+model TransactionsImport {
+  id        String @id @default(cuid())
+  filename  String
+  createdAt DateTime @default(now())
+}
