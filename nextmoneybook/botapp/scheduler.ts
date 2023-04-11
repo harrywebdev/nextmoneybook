@@ -8,14 +8,14 @@ export default function scheduler(bot: Telegraf,) {
     // const SCHEDULE = '* */1 * * *'
 
     schedule.scheduleJob(SCHEDULE, function () {
-        void scheduledJob()
+        void triggerBankUpdate()
     });
 
     process.on('SIGINT', function () {
         schedule.gracefulShutdown().then(() => process.exit(0))
     });
 
-    async function scheduledJob() {
+    async function triggerBankUpdate() {
         try {
             const chatId = Number(process.env.BOT_OWNER_CHAT_ID || 0)
 
