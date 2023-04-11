@@ -12,7 +12,7 @@ export const getAllFilesInStorage = (): Promise<FileInStorage[]> => {
             }).map(file => {
                 return {
                     filename: file,
-                    fullPath: path.join(__dirname, '../storage', file)
+                    fullPath: path.join(__dirname, '../../storage', file)
                 }
             }));
         });
