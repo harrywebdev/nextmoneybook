@@ -61,11 +61,19 @@ function transformAmount(amount: string) {
     return parseInt(amount.replace(/[ , ]*/gi, ''), 10);
 }
 
-function transformDate(date: string) {
+function transformDate(dateString: string) {
     // eg. 03.04.2023
-    const chunks = date.substring(0, 10).split('.')
+    // eg. 29.03.2023 06:06
+    const [date, time] = dateString.split(' ');
 
-    return `${chunks[2]}-${chunks[1]}-${chunks[0]} 00:00:00.000`
+    const timeDefault = (timeChunk: string | undefined) => timeChunk ? timeChunk : '00'
+
+    const dateChunks = date.substring(0, 10).split('.')
+    const timeChunks = time ? time.split(':') : ['00', '00', '00']
+    const formattedDate = `${dateChunks[2]}-${dateChunks[1]}-${dateChunks[0]}`
+    const formattedTime = `${timeDefault(timeChunks[0])}:${timeDefault(timeChunks[1])}:${timeDefault(timeChunks[2])}`
+
+    return `${formattedDate} ${formattedTime}.000`
 }
 
 export default async function importCurrentAccountCsv(csv: CurrentAccountCsvRow[]) {
