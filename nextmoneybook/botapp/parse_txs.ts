@@ -1,12 +1,11 @@
 import {Telegraf} from "telegraf";
-import {PrismaClient} from "@prisma/client";
 import {getAllFilesInStorage, markFileAsDone} from "./parse_txs/files_in_storage";
 import {runImport} from "./parse_txs/run_import";
 import * as process from "process";
+import prisma from "./db";
 
 
 const getAllImports = () => {
-    const prisma = new PrismaClient();
     return prisma.transactionsImport.findMany();
 }
 

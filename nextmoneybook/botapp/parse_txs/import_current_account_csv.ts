@@ -1,3 +1,6 @@
+import {Transaction, TransactionAccountType, TransactionCategory} from "./types";
+import saveTransactionsToDb from "./save_txs_to_db";
+
 const md5 = require('md5');
 
 export type CurrentAccountCsvRow = {
@@ -26,34 +29,34 @@ export type CurrentAccountCsvRow = {
 
 function transformCategory(category: string) {
     if (category.indexOf('Trval') >= 0) {
-        return "standing_order"
+        return TransactionCategory.StandingOrder
     }
 
     if (category.indexOf('Inkaso') >= 0) {
-        return "direct_debit"
+        return TransactionCategory.DirectDebit
     }
 
     if (category.indexOf('bankomat') >= 0) {
-        return "atm"
+        return TransactionCategory.Atm
     }
 
     if (category.indexOf('kartou') >= 0) {
-        return "card_payment"
+        return TransactionCategory.CardPayment
     }
 
     if (category.indexOf('Poplatek') >= 0) {
-        return "fee"
+        return TransactionCategory.Fee
     }
 
     if (category.indexOf('Platba') >= 0) {
-        return "payment"
+        return TransactionCategory.Payment
     }
 
     if (category.indexOf('rok') >= 0) {
-        return "interest"
+        return TransactionCategory.Interest
     }
 
-    return "unknown";
+    return TransactionCategory.Unknown;
 }
 
 function transformAmount(amount: string) {
@@ -73,33 +76,36 @@ function transformDate(dateString: string) {
     const formattedDate = `${dateChunks[2]}-${dateChunks[1]}-${dateChunks[0]}`
     const formattedTime = `${timeDefault(timeChunks[0])}:${timeDefault(timeChunks[1])}:${timeDefault(timeChunks[2])}`
 
-    return `${formattedDate} ${formattedTime}.000`
+    return new Date(`${formattedDate} ${formattedTime}.000Z`)
 }
 
 export default async function importCurrentAccountCsv(csv: CurrentAccountCsvRow[]) {
-    const values = csv.map(row => {
+    const values: Transaction[] = csv.map(row => {
         // the strings are terrible, let's just use indexes
         const rowValues = Object.values(row);
 
         const value = {
-            date_created: transformDate(rowValues[0]),
-            date_charged: transformDate(rowValues[1]),
+            accountType: TransactionAccountType.BankAccount,
+            account: rowValues[2],
+            dateCreated: transformDate(rowValues[0]),
+            dateCharged: transformDate(rowValues[1]),
             category: transformCategory(rowValues[4]),
-            offset_account: rowValues[5] || null,
-            custom_note: `${rowValues[6] !== "" ? rowValues[6] + ', ' : ''}${rowValues[20] !== "" ? rowValues[20] + ', ' : ''}${rowValues[9]}` || null,
+            offsetAccount: rowValues[5] || null,
+            customNote: `${rowValues[6] !== "" ? rowValues[6] + ', ' : ''}${rowValues[19] !== "" ? rowValues[19] + ', ' : ''}${rowValues[9]}` || null,
             message: rowValues[8] || null,
             amount: transformAmount(rowValues[13]),
             currency: rowValues[14],
-            tx_id: rowValues[18],
-            import_id: '',
+            txId: String(rowValues[17]),
+            importTxId: '',
         }
 
-        value.import_id = md5(`${value.tx_id}${value.date_created}${value.amount}`)
+        value.importTxId = md5(`${value.txId}${value.dateCreated}${value.amount}`)
 
         return value;
     });
 
-    // TODO: save the values in DB
+    // save the values in DB
+    await saveTransactionsToDb(values)
 
     // TODO: return some kind of result
 

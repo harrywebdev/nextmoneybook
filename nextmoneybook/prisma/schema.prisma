@@ -42,3 +42,44 @@ model TransactionsImport {
   filename  String
   createdAt DateTime @default(now())
 }
+
+model Transaction {
+  id            String @id @default(cuid())
+  accountType   String
+  account       String
+  dateCreated   DateTime
+  dateCharged   DateTime
+  category      String
+  offsetAccount String?
+  customNote    String?
+  message       String?
+  amount        Int
+  currency      String
+  txId          String
+  importTxId    String  @unique()
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  labels LabelsOnTransactions[]
+}
+
+model Label {
+  id                String @id @default(cuid())
+  name              String
+  color             String
+
+  createdAt DateTime @default(now())
+
+  transactions LabelsOnTransactions[]
+}
+
+model LabelsOnTransactions {
+  label         Label       @relation(fields: [labelId], references: [id])
+  labelId       String
+  transaction   Transaction @relation(fields: [transactionId], references: [id])
+  transactionId String
+  assignedAt    DateTime    @default(now())
+
+  @@id([labelId, transactionId])
+}
