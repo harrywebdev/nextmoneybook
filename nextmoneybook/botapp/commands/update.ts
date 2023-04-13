@@ -1,4 +1,4 @@
-import { Context, Telegraf } from "telegraf";
+import type { Context, Telegraf } from "telegraf";
 import bankUpdate from "../bank_update";
 
 export default function updateCommand(

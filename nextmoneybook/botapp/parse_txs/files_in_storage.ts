@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { FileInStorage } from "./types";
+import type { FileInStorage } from "./types";
 
 export const getStatementsInStorage = (): Promise<FileInStorage[]> => {
   return new Promise((resolve, reject) => {

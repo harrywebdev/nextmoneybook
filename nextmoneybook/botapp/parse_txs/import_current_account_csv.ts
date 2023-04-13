@@ -1,6 +1,7 @@
-import {
+import type {
   CurrentAccountCsvRow,
-  Transaction,
+  Transaction} from "./types";
+import {
   TransactionAccountType,
   TransactionCategory,
 } from "./types";

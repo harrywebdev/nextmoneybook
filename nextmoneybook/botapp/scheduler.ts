@@ -1,4 +1,4 @@
-import { Telegraf } from "telegraf";
+import type { Telegraf } from "telegraf";
 import parser from "./import_transactions";
 
 require("dotenv").config();

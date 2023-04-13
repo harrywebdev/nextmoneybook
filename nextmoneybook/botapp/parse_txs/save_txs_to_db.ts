@@ -1,4 +1,4 @@
-import { Transaction, TransactionDbResult } from "./types";
+import type { Transaction, TransactionDbResult } from "./types";
 import prisma from "../db";
 
 export default async function saveTransactionsToDb(

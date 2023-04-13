@@ -1,4 +1,4 @@
-import { Page } from "puppeteer";
+import type { Page } from "puppeteer";
 import downloadCsv from "./download_csv";
 
 export default async function downloadCurrentAccountCsv(

@@ -1,5 +1,5 @@
 import scheduler from "./scheduler";
-import { Context } from "telegraf";
+import type { Context } from "telegraf";
 import updateCommand from "./commands/update";
 
 require("dotenv").config();
