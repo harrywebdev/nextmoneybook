@@ -33,3 +33,14 @@ export type Transaction = {
     txId: string,
     importTxId: string,
 }
+
+export type TransactionDbResult = {
+    added: number,
+    ignored: number,
+    total: number,
+}
+
+export type TransactionImportResult = TransactionDbResult & {
+    action: "import" | "skip"
+    filename: string,
+}

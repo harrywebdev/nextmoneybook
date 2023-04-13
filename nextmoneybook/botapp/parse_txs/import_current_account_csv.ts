@@ -4,27 +4,27 @@ import saveTransactionsToDb from "./save_txs_to_db";
 const md5 = require('md5');
 
 export type CurrentAccountCsvRow = {
-    'Datum proveden�': string,
-    'Datum za��tov�n�': string,
-    '��slo ��tu': string,
-    'N�zev ��tu': string,
+    'Datum provedení': string,
+    'Datum zaúčtování': string,
+    'Číslo účtu': string,
+    'Název účtu': string,
     'Kategorie transakce': string,
-    '��slo proti��tu': string,
-    'N�zev proti��tu': string,
+    'Číslo protiúčtu': string,
+    'Název protiúčtu': string,
     'Typ transakce': string,
-    'Zpr�va': string,
-    'Pozn�mka': string,
-    VS: string,
-    KS: string,
-    SS: string,
-    'Za��tovan� ��stka': string,
-    'M�na ��tu': string,
-    'P�vodn� ��stka a m�na': string,
-    Poplatek: string,
+    'Zpráva': string,
+    'Poznámka': string,
+    VS: '800527469',
+    KS: '',
+    SS: '',
+    'Zaúčtovaná částka': string,
+    'Měna účtu': string,
+    'Původní částka a měna': string,
+    Poplatek: '0,00',
     'Id transakce': string,
-    'Vlastn� pozn�mka': string,
-    'N�zev obchodn�ka': string,
-    'M�sto': string,
+    'Vlastní poznámka': string,
+    'Název obchodníka': string,
+    'Město': string,
 }
 
 function transformCategory(category: string) {
@@ -105,9 +105,5 @@ export default async function importCurrentAccountCsv(csv: CurrentAccountCsvRow[
     });
 
     // save the values in DB
-    await saveTransactionsToDb(values)
-
-    // TODO: return some kind of result
-
-    return values;
+    return await saveTransactionsToDb(values)
 }

@@ -1,5 +1,5 @@
 import {Telegraf} from "telegraf";
-import parser from "./parse_txs";
+import parser from "./import_transactions";
 
 require('dotenv').config()
 const schedule = require('node-schedule');
@@ -17,7 +17,16 @@ export default function scheduler(bot: Telegraf,) {
         // void parser(bot)
     });
 
-    void parser(bot)
+    void parser((message: string) => {
+        const chatId = Number(process.env.BOT_OWNER_CHAT_ID || 0)
+
+        if (!chatId) {
+            console.error('Missing chat ID.')
+            return;
+        }
+
+        return bot.telegram.sendMessage(chatId, message);
+    })
 
     process.on('SIGINT', function () {
         schedule.gracefulShutdown().then(() => process.exit(0))

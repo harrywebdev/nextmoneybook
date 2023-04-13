@@ -2,13 +2,13 @@ import fs from "fs";
 import path from "path";
 import {FileInStorage} from "./types";
 
-export const getAllFilesInStorage = (): Promise<FileInStorage[]> => {
+export const getStatementsInStorage = (): Promise<FileInStorage[]> => {
     return new Promise((resolve, reject) => {
         fs.readdir(path.join(__dirname, '../../storage'), (err, files) => {
             if (err) reject(err);
 
             resolve(files.filter(file => {
-                return file.endsWith('.csv');
+                return file.match(/^rb_/) && file.endsWith('.csv');
             }).map(file => {
                 return {
                     filename: file,

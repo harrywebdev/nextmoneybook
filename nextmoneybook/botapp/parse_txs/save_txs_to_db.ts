@@ -1,9 +1,7 @@
-import {Transaction} from "./types";
-import {Transaction as PrismaTransaction} from "@prisma/client";
+import {Transaction, TransactionDbResult} from "./types";
 import prisma from "../db";
 
-export default async function saveTransactionsToDb(values: Transaction[]): Promise<PrismaTransaction[]> {
-    // console.log(`values`, values);
+export default async function saveTransactionsToDb(values: Transaction[]): Promise<TransactionDbResult> {
     // fetch existing IDs from DB
     const transactionsImportTxIds = values.map(value => value.importTxId);
 
@@ -28,5 +26,11 @@ export default async function saveTransactionsToDb(values: Transaction[]): Promi
         }))
 
     // insert
-    return await Promise.all(transactions)
+    await Promise.all(transactions)
+
+    return {
+        added: transactions.length,
+        total: values.length,
+        ignored: values.length - transactions.length
+    }
 }
