@@ -2,6 +2,7 @@ import {CreditCardCsvRow, CurrentAccountCsvRow, FileInStorage, TransactionImport
 import fs from "fs";
 import csv from "csv-parser"
 import importCurrentAccountCsv from "./import_current_account_csv";
+import importCreditCardCsv from "./import_credit_card_csv";
 
 const readFile = async <T>(pathToFile: string): Promise<T[]> => {
     const results: T[] = [];
@@ -45,7 +46,7 @@ export const runImport = async (file: FileInStorage): Promise<TransactionImportR
         default:
             return {
                 added: 0,
-                ignored: 0,
+                skipped: 0,
                 total: 0,
                 filename: file.filename,
                 action: "skip"

@@ -31,6 +31,6 @@ export default async function saveTransactionsToDb(values: Transaction[]): Promi
     return {
         added: transactions.length,
         total: values.length,
-        ignored: values.length - transactions.length
+        skipped: values.length - transactions.length
     }
 }

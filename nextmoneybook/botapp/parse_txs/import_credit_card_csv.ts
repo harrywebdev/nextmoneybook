@@ -1,31 +1,28 @@
-import {CurrentAccountCsvRow, Transaction, TransactionAccountType, TransactionCategory} from "./types";
+import {
+    CreditCardCsvRow,
+    Transaction,
+    TransactionAccountType,
+    TransactionCategory
+} from "./types";
 import saveTransactionsToDb from "./save_txs_to_db";
 
 const md5 = require('md5');
 
 function transformCategory(category: string) {
-    if (category.indexOf('Trval') >= 0) {
-        return TransactionCategory.StandingOrder
-    }
-
-    if (category.indexOf('Inkaso') >= 0) {
-        return TransactionCategory.DirectDebit
+    if (category.indexOf('Platba') >= 0) {
+        return TransactionCategory.Payment
     }
 
     if (category.indexOf('bankomat') >= 0) {
         return TransactionCategory.Atm
     }
 
-    if (category.indexOf('kartou') >= 0) {
-        return TransactionCategory.CardPayment
-    }
-
-    if (category.indexOf('Poplatek') >= 0) {
+    if (category.indexOf('Poplat') >= 0) {
         return TransactionCategory.Fee
     }
 
-    if (category.indexOf('Platba') >= 0) {
-        return TransactionCategory.Payment
+    if (category.indexOf('Splátk') >= 0) {
+        return TransactionCategory.Repayment
     }
 
     if (category.indexOf('rok') >= 0) {
@@ -55,23 +52,23 @@ function transformDate(dateString: string) {
     return new Date(`${formattedDate} ${formattedTime}.000Z`)
 }
 
-export default async function importCurrentAccountCsv(csv: CurrentAccountCsvRow[]) {
+export default async function importCreditCardCsv(csv: CreditCardCsvRow[]) {
     const values: Transaction[] = csv.map(row => {
         // the strings are terrible, let's just use indexes
         const rowValues = Object.values(row);
 
         const value = {
-            accountType: TransactionAccountType.BankAccount,
-            account: rowValues[2],
-            dateCreated: transformDate(rowValues[0]),
-            dateCharged: transformDate(rowValues[1]),
+            accountType: TransactionAccountType.CreditCard,
+            account: rowValues[0],
+            dateCreated: transformDate(rowValues[2]),
+            dateCharged: transformDate(rowValues[3]),
             category: transformCategory(rowValues[4]),
-            offsetAccount: rowValues[5] || null,
-            customNote: `${rowValues[6] !== "" ? rowValues[6] + ', ' : ''}${rowValues[19] !== "" ? rowValues[19] + ', ' : ''}${rowValues[9]}` || null,
-            message: rowValues[8] || null,
-            amount: transformAmount(rowValues[13]),
-            currency: rowValues[14],
-            txId: String(rowValues[17]),
+            offsetAccount: null,
+            customNote: `${rowValues[11] !== "" ? rowValues[11] + ', ' : ''}${rowValues[10] !== "" ? rowValues[10] + ', ' : ''}${rowValues[12]}` || null,
+            message: null,
+            amount: transformAmount(rowValues[7]),
+            currency: rowValues[8],
+            txId: '',
             importTxId: '',
             rawData: JSON.stringify(rowValues),
         }

@@ -57,6 +57,7 @@ model Transaction {
   currency      String
   txId          String
   importTxId    String  @unique()
+  rawData       String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

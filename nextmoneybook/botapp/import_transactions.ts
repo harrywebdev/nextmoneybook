@@ -30,7 +30,7 @@ export default async function parser(sendMessage: (message: string) => void) {
 
             const message = [
                 `Imported ${file.filename} ✅.`,
-                `Added ${importResult.added}, ignored ${importResult.ignored}, total of ${importResult.total} transactions.`
+                `Added ${importResult.added}, skipped ${importResult.skipped}, total of ${importResult.total} transactions.`
             ]
 
             await sendMessage(message.join("\n"));

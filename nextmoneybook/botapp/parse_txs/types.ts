@@ -15,6 +15,7 @@ export enum TransactionCategory {
     CardPayment = 'card_payment',
     Fee = 'fee',
     Payment = 'payment',
+    Repayment = 'repayment',
     Interest = 'interest',
     Unknown = 'unknown',
 }
@@ -32,11 +33,12 @@ export type Transaction = {
     currency: string,
     txId: string,
     importTxId: string,
+    rawData: string,
 }
 
 export type TransactionDbResult = {
     added: number,
-    ignored: number,
+    skipped: number,
     total: number,
 }
 
