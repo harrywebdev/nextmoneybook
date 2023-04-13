@@ -1,12 +1,7 @@
 {
-  "include": [
-    "**/*.ts",
-    "**/*.tsx"
-  ],
+  "include": ["**/*.ts", "**/*.tsx"],
   "compilerOptions": {
-    "lib": [
-      "ES2019"
-    ],
+    "lib": ["ES2019"],
     "isolatedModules": true,
     "esModuleInterop": true,
     "module": "commonjs",

@@ -1,7 +1,7 @@
-import {json, LoaderArgs} from "@remix-run/node";
+import { json, LoaderArgs } from "@remix-run/node";
 
-export async function loader({params}: LoaderArgs) {
-    return json({
-        success: true
-    });
+export async function loader({ params }: LoaderArgs) {
+  return json({
+    success: true,
+  });
 }
