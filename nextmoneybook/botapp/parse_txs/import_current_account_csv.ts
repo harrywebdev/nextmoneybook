@@ -1,31 +1,7 @@
-import {Transaction, TransactionAccountType, TransactionCategory} from "./types";
+import {CurrentAccountCsvRow, Transaction, TransactionAccountType, TransactionCategory} from "./types";
 import saveTransactionsToDb from "./save_txs_to_db";
 
 const md5 = require('md5');
-
-export type CurrentAccountCsvRow = {
-    'Datum provedení': string,
-    'Datum zaúčtování': string,
-    'Číslo účtu': string,
-    'Název účtu': string,
-    'Kategorie transakce': string,
-    'Číslo protiúčtu': string,
-    'Název protiúčtu': string,
-    'Typ transakce': string,
-    'Zpráva': string,
-    'Poznámka': string,
-    VS: '800527469',
-    KS: '',
-    SS: '',
-    'Zaúčtovaná částka': string,
-    'Měna účtu': string,
-    'Původní částka a měna': string,
-    Poplatek: '0,00',
-    'Id transakce': string,
-    'Vlastní poznámka': string,
-    'Název obchodníka': string,
-    'Město': string,
-}
 
 function transformCategory(category: string) {
     if (category.indexOf('Trval') >= 0) {

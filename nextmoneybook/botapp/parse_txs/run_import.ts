@@ -1,7 +1,7 @@
-import {FileInStorage, TransactionImportResult} from "./types";
+import {CreditCardCsvRow, CurrentAccountCsvRow, FileInStorage, TransactionImportResult} from "./types";
 import fs from "fs";
 import csv from "csv-parser"
-import importCurrentAccountCsv, {CurrentAccountCsvRow} from "./import_current_account_csv";
+import importCurrentAccountCsv from "./import_current_account_csv";
 
 const readFile = async <T>(pathToFile: string): Promise<T[]> => {
     const results: T[] = [];
