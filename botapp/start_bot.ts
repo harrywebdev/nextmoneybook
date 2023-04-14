@@ -6,8 +6,11 @@ require("dotenv").config();
 
 const { Telegraf } = require("telegraf");
 
-const authCheck = (ctx: Context, cb: () => void) => {
-  if (ctx.message?.from?.id === Number(process.env.BOT_OWNER_ID)) {
+const authCheck = (fromId: number | undefined, cb: () => void) => {
+  if (
+    typeof fromId !== "undefined" &&
+    fromId === Number(process.env.BOT_OWNER_ID)
+  ) {
     cb();
   }
 };
@@ -15,13 +18,13 @@ const authCheck = (ctx: Context, cb: () => void) => {
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
 bot.start((ctx: Context) => {
-  authCheck(ctx, () => {
+  authCheck(ctx.from?.id, () => {
     ctx.reply("Welcome");
   });
 });
 
 bot.help((ctx: Context) => {
-  authCheck(ctx, () => {
+  authCheck(ctx.from?.id, () => {
     const commands = ["/status", "/update"];
     ctx.reply("Available commands:\n " + commands.join("\n"));
   });

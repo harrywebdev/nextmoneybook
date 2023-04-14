@@ -3,7 +3,7 @@ import bankUpdate from "../bank_update";
 
 export default function updateCommand(
   bot: Telegraf,
-  authCheck: (ctx: Context, cb: () => void) => void
+  authCheck: (fromId: number | undefined, cb: () => void) => void
 ) {
   let IS_TRIGGERING_UPDATE = false;
 
@@ -26,14 +26,14 @@ export default function updateCommand(
 
   // trigger update manually
   bot.command("update", async (ctx: Context) => {
-    authCheck(ctx, () => {
+    authCheck(ctx.from?.id, () => {
       updateFromBank(ctx);
     });
   });
 
   // action triggered by scheduler
   bot.action("trigger_update", async (ctx: Context) => {
-    authCheck(ctx, async () => {
+    authCheck(ctx.from?.id, async () => {
       // first, remove the button from the message so user cannot trigger this again by accident
       if (ctx.callbackQuery?.message) {
         try {
