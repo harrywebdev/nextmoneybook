@@ -49,7 +49,7 @@
     "puppeteer": "^19.8.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "telegraf": "github:telegraf/telegraf",
+    "telegraf": "^4.12.2",
     "tiny-invariant": "^1.3.1"
   },
   "devDependencies": {
