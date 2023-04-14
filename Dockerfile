@@ -23,6 +23,10 @@ FROM base as deps
 WORKDIR /myapp
 
 ADD package.json pnpm-lock.yaml .npmrc ./
+
+# for Puppeteer to have chromium installed
+ENV PUPPETEER_CACHE_DIR /myapp/.cache/puppeteer
+
 RUN pnpm install --production=false
 
 # Setup production node_modules
@@ -31,6 +35,8 @@ FROM base as production-deps
 WORKDIR /myapp
 
 COPY --from=deps /myapp/node_modules /myapp/node_modules
+COPY --from=deps /myapp/.cache /myapp/.cache
+
 ADD package.json pnpm-lock.yaml .npmrc ./
 ADD supervisor.conf ./
 RUN pnpm prune --production
@@ -62,6 +68,7 @@ WORKDIR /myapp
 
 COPY --from=production-deps /myapp/node_modules /myapp/node_modules
 COPY --from=production-deps /myapp/supervisor.conf /myapp/supervisor.conf
+COPY --from=production-deps /myapp/.cache /myapp/.cache
 
 # this doesn't work with PNPM - the actual generated files are in a different location
 # e.g. `node_modules/.pnpm/@prisma+client@4.12.0_prisma@4.12.0/node_modules/.prisma`

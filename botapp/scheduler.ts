@@ -9,7 +9,8 @@ export default function scheduler(bot: Telegraf) {
   const BANK_SCHEDULE = "*/10 * * * *";
 
   schedule.scheduleJob(BANK_SCHEDULE, function () {
-    void triggerBankUpdate();
+    // disable until it works in prod
+    // void triggerBankUpdate();
   });
 
   const IMPORT_SCHEDULE = "* * */1 * *";
