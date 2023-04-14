@@ -11,6 +11,9 @@ RUN apt-get update && apt-get install -y openssl sqlite3 git
 RUN apt-get install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev libsqlite3-dev wget libbz2-dev -y
 RUN apt-get install python3 -y
 
+# Install supervisor for running multiple processes
+RUN apt-get install supervisor -y
+
 # Install pnpm
 RUN npm install -g pnpm
 
@@ -29,6 +32,7 @@ WORKDIR /myapp
 
 COPY --from=deps /myapp/node_modules /myapp/node_modules
 ADD package.json pnpm-lock.yaml .npmrc ./
+ADD supervisor.conf ./
 RUN pnpm prune --production
 
 # Build the app
@@ -57,6 +61,7 @@ RUN echo "#!/bin/sh\nset -x\nsqlite3 \$DATABASE_URL" > /usr/local/bin/database-c
 WORKDIR /myapp
 
 COPY --from=production-deps /myapp/node_modules /myapp/node_modules
+COPY --from=production-deps /myapp/supervisor.conf /myapp/supervisor.conf
 
 # this doesn't work with PNPM - the actual generated files are in a different location
 # e.g. `node_modules/.pnpm/@prisma+client@4.12.0_prisma@4.12.0/node_modules/.prisma`
@@ -68,4 +73,4 @@ COPY --from=build /myapp/package.json /myapp/package.json
 COPY --from=build /myapp/start.sh /myapp/start.sh
 COPY --from=build /myapp/prisma /myapp/prisma
 
-ENTRYPOINT [ "./start.sh" ]
+ENTRYPOINT supervisord -c /myapp/supervisor.conf
