@@ -98,6 +98,11 @@ jobs:
         with:
           node-version: 16
 
+      - name: ⎔ Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8.2.0
+
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
         with:
