@@ -52,4 +52,23 @@ export default function updateCommand(
       await updateFromBank(ctx);
     });
   });
+
+  // remove the buttons
+  bot.action("cancel_update", async (ctx: Context) => {
+    try {
+      if (!ctx.callbackQuery?.message) {
+        return;
+      }
+
+      await bot.telegram.editMessageReplyMarkup(
+        ctx.callbackQuery.message.chat.id,
+        ctx.callbackQuery.message.message_id,
+        undefined,
+        undefined
+      );
+    } catch (error) {
+      // can ignore it probably
+      console.error(error);
+    }
+  });
 }

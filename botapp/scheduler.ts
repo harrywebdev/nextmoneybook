@@ -5,8 +5,8 @@ require("dotenv").config();
 const schedule = require("node-schedule");
 
 export default function scheduler(bot: Telegraf) {
-  const BANK_SCHEDULE = "* * 12 * *";
-  // const BANK_SCHEDULE = '* */1 * * *'
+  // const BANK_SCHEDULE = "* 12 * * *";
+  const BANK_SCHEDULE = "55 * * * *";
 
   schedule.scheduleJob(BANK_SCHEDULE, function () {
     void triggerBankUpdate();
@@ -47,7 +47,13 @@ export default function scheduler(bot: Telegraf) {
         {
           reply_markup: {
             inline_keyboard: [
-              [{ text: "Go on", callback_data: "trigger_update" }],
+              [
+                { text: "Go on", callback_data: "trigger_update" },
+                {
+                  text: "Nope",
+                  callback_data: "cancel_update",
+                },
+              ],
             ],
           },
         }
