@@ -74,4 +74,8 @@ COPY --from=build /myapp/start.sh /myapp/start.sh
 COPY --from=build /myapp/prisma /myapp/prisma
 COPY --from=build /myapp/botapp /myapp/botapp
 
+# set up storage
+COPY --from=build /myapp/storage /myapp/storage
+RUN chmod 755 /myapp/storage
+
 ENTRYPOINT supervisord -c /myapp/supervisor.conf
