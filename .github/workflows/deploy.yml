@@ -101,23 +101,19 @@ jobs:
       - name: ⎔ Setup pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 8.2.0
-
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
-        with:
-          useLockFile: false
+          version: 7.16.1
+          run_install: true
 
       - name: 🛠 Setup Database
-        run: npx prisma migrate reset --force
+        run: pnpx prisma migrate reset --force
 
       - name: ⚙️ Build
-        run: npm run build
+        run: pnpm run build
 
       - name: 🌳 Cypress run
         uses: cypress-io/github-action@v5
         with:
-          start: npm run start:mocks
+          start: pnpm run start:mocks
           wait-on: "http://localhost:8811"
         env:
           PORT: "8811"
