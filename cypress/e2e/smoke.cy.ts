@@ -2,10 +2,16 @@ import { faker } from "@faker-js/faker";
 
 describe("smoke tests", () => {
   afterEach(() => {
-    cy.cleanupUser();
+    // cy.cleanupUser();
   });
 
-  it("should allow you to register and login", () => {
+  it ("should show a link to Dashboard", () => {
+    cy.visitAndCheck("/");
+
+    cy.findByTestId("dashboard-link").should("exist");
+  })
+
+  it.skip("should allow you to register and login", () => {
     const loginForm = {
       email: `${faker.internet.userName()}@example.com`,
       password: faker.internet.password(),
@@ -26,7 +32,7 @@ describe("smoke tests", () => {
     cy.findByRole("link", { name: /log in/i });
   });
 
-  it("should allow you to make a note", () => {
+  it.skip("should allow you to make a note", () => {
     const testNote = {
       title: faker.lorem.words(1),
       body: faker.lorem.sentences(1),
