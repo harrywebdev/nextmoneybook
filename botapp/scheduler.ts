@@ -6,7 +6,7 @@ const schedule = require("node-schedule");
 
 export default function scheduler(bot: Telegraf) {
   // const BANK_SCHEDULE = "* 12 * * *";
-  const BANK_SCHEDULE = "04 * * * *";
+  const BANK_SCHEDULE = "*/10 * * * *";
 
   schedule.scheduleJob(BANK_SCHEDULE, function () {
     void triggerBankUpdate();
