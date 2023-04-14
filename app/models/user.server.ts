@@ -1,6 +1,5 @@
 import type { Password, User } from "@prisma/client";
 import bcrypt from "bcryptjs";
-
 import { prisma } from "~/db.server";
 
 export type { User } from "@prisma/client";
@@ -53,6 +52,13 @@ export async function verifyLogin(
   );
 
   if (!isValid) {
+    return null;
+  }
+
+  // also check the password expiry date
+  const now = new Date();
+  const expiryDate = new Date(userWithPassword.password.expiresAt);
+  if (now > expiryDate) {
     return null;
   }
 

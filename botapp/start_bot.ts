@@ -1,6 +1,7 @@
 import scheduler from "./scheduler";
 import type { Context } from "telegraf";
 import updateCommand from "./commands/update";
+import loginCommand from "./commands/login";
 
 require("dotenv").config();
 
@@ -31,6 +32,7 @@ bot.help((ctx: Context) => {
 });
 
 updateCommand(bot, authCheck);
+loginCommand(bot, authCheck);
 
 bot.launch({}).catch((err: Error) => {
   console.error(err);
