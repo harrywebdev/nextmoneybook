@@ -5,11 +5,7 @@ FROM node:16-bullseye-slim as base
 ENV NODE_ENV production
 
 # Install openssl for Prisma
-RUN apt-get update && apt-get install -y openssl sqlite3 git
-
-# Install Python for node iconv pkg
-RUN apt-get install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev libsqlite3-dev wget libbz2-dev -y
-RUN apt-get install python3 -y
+RUN apt-get update && apt-get install -y openssl sqlite3
 
 # Install supervisor for running multiple processes
 RUN apt-get install supervisor -y
@@ -26,6 +22,10 @@ ADD package.json pnpm-lock.yaml .npmrc ./
 
 # for Puppeteer to have chromium installed
 ENV PUPPETEER_CACHE_DIR /myapp/.cache/puppeteer
+
+# Install Python for node iconv pkg
+RUN apt-get install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev libsqlite3-dev wget libbz2-dev -y
+RUN apt-get install python3 -y
 
 RUN pnpm install --production=false
 
@@ -60,6 +60,9 @@ FROM base
 ENV DATABASE_URL=file:/data/sqlite.db
 ENV PORT="8080"
 ENV NODE_ENV="production"
+
+# for Puppeteer to have chromium installed
+ENV PUPPETEER_CACHE_DIR /myapp/.cache/puppeteer
 
 # add shortcut for connecting to database CLI
 RUN echo "#!/bin/sh\nset -x\nsqlite3 \$DATABASE_URL" > /usr/local/bin/database-cli && chmod +x /usr/local/bin/database-cli
