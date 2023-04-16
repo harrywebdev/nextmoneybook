@@ -77,7 +77,8 @@ COPY --from=production-deps /myapp/.cache /myapp/.cache
 COPY --from=build /myapp/build /myapp/build
 COPY --from=build /myapp/public /myapp/public
 COPY --from=build /myapp/package.json /myapp/package.json
-COPY --from=build /myapp/start.sh /myapp/start.sh
+COPY --from=build /myapp/start_remix.sh /myapp/start_remix.sh
+COPY --from=build /myapp/start_botapp.sh /myapp/start_botapp.sh
 COPY --from=build /myapp/prisma /myapp/prisma
 COPY --from=build /myapp/botapp /myapp/botapp
 
