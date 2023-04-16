@@ -94,8 +94,11 @@ COPY --from=build /myapp/start_botapp.sh /myapp/start_botapp.sh
 COPY --from=build /myapp/prisma /myapp/prisma
 COPY --from=build /myapp/botapp /myapp/botapp
 
+RUN chown node:node ./
+
 # set up storage
 COPY --from=build /myapp/storage /myapp/storage
 RUN chmod 755 /myapp/storage
 
+USER node
 ENTRYPOINT supervisord -c /myapp/supervisor.conf
