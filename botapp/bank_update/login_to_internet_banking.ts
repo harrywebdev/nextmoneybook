@@ -39,8 +39,16 @@ export default async function loginToInternetBanking(
   const submitUsernameSelector = ".login-element form button";
   console.log(`pptr: waitForSelector: "${submitUsernameSelector}"`);
   await page.waitForSelector(submitUsernameSelector);
+
+  await page.screenshot({path: 'debug0.png'});
+
   console.log(`pptr: click: "${submitUsernameSelector}"`);
-  await page.click(submitUsernameSelector);
+  await page.$eval(`submitUsernameSelector`, element =>
+      element.click()
+  );
+  // await page.click(submitUsernameSelector);
+
+  await page.screenshot({path: 'debug1.png'});
 
   sendMessage("I've triggered a login to your internet banking 💰");
 
