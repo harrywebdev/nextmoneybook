@@ -5,7 +5,7 @@ export function getStoragePath(appendPath: string = "") {
   if (!process.env.STORAGE_PATH) {
     return path.join('/data', appendPath);
   }
-  
+
   let storagePath = process.env.STORAGE_PATH;
   storagePath = storagePath[0] === "/" ? storagePath : `/${storagePath}`;
 

@@ -30,6 +30,7 @@ export default async function loginToInternetBanking(
   await page.waitForSelector(usernameInputSelector);
 
   // Type into search box
+  console.log(`pptr: typing login: ${process.env.BOT_OWNER_BANK_LOGIN_USERNAME || ""}`)
   await page.type(
     usernameInputSelector,
     process.env.BOT_OWNER_BANK_LOGIN_USERNAME || ""
@@ -55,7 +56,7 @@ export default async function loginToInternetBanking(
   // wait on the 2fa screen
   await page.waitForSelector("#method");
 
-  // await page.screenshot({path: 'debug2.png'});
+  await page.screenshot({path: 'debug2.png'});
 
   // wait for the dashboard screen
   const transactionsHistorySelector = "button[xid=transactionsLink]";

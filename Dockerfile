@@ -9,6 +9,9 @@ RUN apt-get update && apt-get upgrade
 # Install openssl for Prisma
 RUN apt-get install -yq openssl sqlite3
 
+# Install stuff for debugging
+RUN apt-get install -y openssh-client openssh-server vim
+
 # Install supervisor for running multiple processes
 RUN apt-get install supervisor -y
 
