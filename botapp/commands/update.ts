@@ -27,6 +27,7 @@ export default function updateCommand(
   // trigger update manually
   bot.command("update", async (ctx: Context) => {
     authCheck(ctx.from?.id, () => {
+      console.log("bot:update");
       updateFromBank(ctx);
     });
   });

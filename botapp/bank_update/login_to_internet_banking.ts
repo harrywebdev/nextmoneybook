@@ -18,10 +18,15 @@ export default async function loginToInternetBanking(
   // Set screen size
   await page.setViewport({ width: 1080, height: 1024 });
 
+  console.log('pptr: waitForSelector: ".login-element a"');
+  await page.waitForSelector(".login-element a");
+  console.log('pptr: click: ".login-element a"');
   await page.click(".login-element a");
 
   const usernameInputSelector =
     ".login-element .form-field.form-field-text input";
+
+  console.log(`pptr: waitForSelector: "${usernameInputSelector}"`);
   await page.waitForSelector(usernameInputSelector);
 
   // Type into search box
@@ -32,12 +37,14 @@ export default async function loginToInternetBanking(
 
   // trigger 2fa
   const submitUsernameSelector = ".login-element form button";
+  console.log(`pptr: waitForSelector: "${submitUsernameSelector}"`);
   await page.waitForSelector(submitUsernameSelector);
+  console.log(`pptr: click: "${submitUsernameSelector}"`);
   await page.click(submitUsernameSelector);
 
   sendMessage("I've triggered a login to your internet banking 💰");
 
-  // await page.screenshot({path: 'debug1.png'});
+  await page.screenshot({path: 'debug1.png'});
 
   // wait on the 2fa screen
   await page.waitForSelector("#method");

@@ -4,6 +4,8 @@ import loginToInternetBanking from "./bank_update/login_to_internet_banking";
 import downloadCurrentAccountCsv from "./bank_update/download_current_account_csv";
 
 const bankUpdate = async (sendMessage: (message: string) => void) => {
+  console.log('commencing bank update');
+
   const browser = await puppeteer.launch({});
   const page = await browser.newPage();
 
