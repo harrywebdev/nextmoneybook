@@ -6,27 +6,25 @@ const schedule = require("node-schedule");
 
 export default function scheduler(bot: Telegraf) {
   // const BANK_SCHEDULE = "* 12 * * *";
-  const BANK_SCHEDULE = "*/10 * * * *";
+  const BANK_SCHEDULE = "12 12 * * *";
 
   schedule.scheduleJob(BANK_SCHEDULE, function () {
     // disable until it works in prod
-    // void triggerBankUpdate();
+    void triggerBankUpdate();
   });
 
-  const IMPORT_SCHEDULE = "* * */1 * *";
+  const IMPORT_SCHEDULE = "* */1 * * *";
   schedule.scheduleJob(IMPORT_SCHEDULE, function () {
-    // void parser(bot)
-  });
+    void parser((message: string) => {
+      const chatId = Number(process.env.BOT_OWNER_CHAT_ID || 0);
 
-  void parser((message: string) => {
-    const chatId = Number(process.env.BOT_OWNER_CHAT_ID || 0);
+      if (!chatId) {
+        console.error("Missing chat ID.");
+        return;
+      }
 
-    if (!chatId) {
-      console.error("Missing chat ID.");
-      return;
-    }
-
-    return bot.telegram.sendMessage(chatId, message);
+      return bot.telegram.sendMessage(chatId, message);
+    });
   });
 
   process.on("SIGINT", function () {
