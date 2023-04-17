@@ -8,6 +8,7 @@ export default function convertStatementEncoding(statementFilePath: string) {
 
   const newFilePath = statementFilePath.replace(".csv", "_utf8.csv");
   fs.writeFileSync(newFilePath, buffer.toString(), "utf8");
+  fs.rmSync(statementFilePath);
 
   return newFilePath;
 }
