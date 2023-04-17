@@ -43,7 +43,7 @@ export default async function loginToInternetBanking(
   await page.screenshot({path: 'debug0.png'});
 
   console.log(`pptr: click: "${submitUsernameSelector}"`);
-  await page.$eval(`submitUsernameSelector`, element =>
+  await page.$eval(submitUsernameSelector, (element: HTMLButtonElement) =>
       element.click()
   );
   // await page.click(submitUsernameSelector);
@@ -51,8 +51,6 @@ export default async function loginToInternetBanking(
   await page.screenshot({path: 'debug1.png'});
 
   sendMessage("I've triggered a login to your internet banking 💰");
-
-  await page.screenshot({path: 'debug1.png'});
 
   // wait on the 2fa screen
   await page.waitForSelector("#method");
