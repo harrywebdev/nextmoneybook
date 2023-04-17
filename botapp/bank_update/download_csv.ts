@@ -3,6 +3,13 @@ import path from "path";
 import { checkExistsWithTimeout, moveFile } from "./pptr_helpers";
 import convertStatementEncoding from "./convert_statement_encoding";
 
+function getStoragePath(appendPath: string = "") {
+  let storagePath = process.env.STORAGE_PATH || "/data";
+  storagePath = storagePath[0] === "/" ? storagePath : `/${storagePath}`;
+
+  return path.join(__dirname, `../..${storagePath}/`, appendPath);
+}
+
 export default async function downloadCsv(
   page: Page,
   filePrefix: string,
@@ -36,7 +43,7 @@ export default async function downloadCsv(
 
         sendMessage(`I've got a CSV file: ${filename}. 📥`);
 
-        csvFilename = path.join(__dirname, "../../storage/", filename);
+        csvFilename = getStoragePath(filename);
       }
     }
   };
@@ -51,7 +58,7 @@ export default async function downloadCsv(
   const cdpsession = await page.target().createCDPSession();
   await cdpsession.send("Browser.setDownloadBehavior", {
     behavior: "allow",
-    downloadPath: path.join(__dirname, "../../storage/"),
+    downloadPath: getStoragePath(""),
   });
 
   // click the download CSV button - click it twice to go through the popup
@@ -76,11 +83,7 @@ export default async function downloadCsv(
     // move the file and name it properly
     await moveFile(
       csvFilename,
-      path.join(
-        __dirname,
-        "../../storage/",
-        `${filePrefix}_${new Date().toISOString()}.csv`
-      )
+      getStoragePath(`${filePrefix}_${new Date().toISOString()}.csv`)
     );
   } else {
     sendMessage(`Could not get CSV filename. 🚫`);

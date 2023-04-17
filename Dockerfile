@@ -41,7 +41,6 @@ COPY --chown=node:node cypress ./cypress
 COPY --chown=node:node mocks ./mocks
 COPY --chown=node:node prisma ./prisma
 COPY --chown=node:node public ./public
-COPY --chown=node:node storage ./storage
 COPY --chown=node:node test ./test
 COPY --chown=node:node .eslintrc.js ./.eslintrc.js
 COPY --chown=node:node cypress.config.ts ./cypress.config.ts
@@ -66,7 +65,6 @@ COPY --chown=node:node --from=builder /nmbapp/build /nmbapp/build
 
 COPY --chown=node:node prisma ./prisma
 COPY --chown=node:node public ./public
-COPY --chown=node:node storage ./storage
 
 # install prod deps
 COPY --chown=node:node package.json pnpm-lock.yaml .npmrc ./
@@ -79,8 +77,6 @@ COPY --chown=node:node supervisor.conf ./supervisor.conf
 ENV DATABASE_URL=file:/data/sqlite.db
 ENV PORT="8080"
 ENV NODE_ENV="production"
-
-RUN chmod 755 /nmbapp/storage
 
 # TODO: remove all unnecessary installed changes
 
