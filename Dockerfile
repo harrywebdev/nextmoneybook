@@ -10,97 +10,73 @@ RUN apt-get update && apt-get install -y openssl sqlite3
 # Install supervisor for running multiple processes
 RUN apt-get install supervisor -y
 
-# Install pnpm
-RUN npm install -g pnpm
-
-# Install all node_modules, including dev dependencies
-FROM base as deps
-
-WORKDIR /myapp
-
-# We don't need the standalone Chromium
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
-
-ADD package.json pnpm-lock.yaml .npmrc ./
-
 # Install Python for node iconv pkg
 RUN apt-get install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev libsqlite3-dev wget libbz2-dev -y
 RUN apt-get install python3 -y
 
+# Install pnpm
+RUN npm install -g pnpm
+
+# add shortcut for connecting to database CLI
+RUN echo "#!/bin/sh\nset -x\nsqlite3 \$DATABASE_URL" > /usr/local/bin/database-cli && chmod +x /usr/local/bin/database-cli
+
+FROM base as builder
+
+WORKDIR /nmbapp
+
+RUN chown node:node ./
+USER node
+
+COPY --chown=node:node package.json pnpm-lock.yaml .npmrc ./
 RUN pnpm install --production=false
 
-# Setup production node_modules
-FROM base as production-deps
+COPY --chown=node:node app ./app
+COPY --chown=node:node botapp ./botapp
+COPY --chown=node:node cypress ./cypress
+COPY --chown=node:node mocks ./mocks
+COPY --chown=node:node prisma ./prisma
+COPY --chown=node:node public ./public
+COPY --chown=node:node storage ./storage
+COPY --chown=node:node test ./test
+COPY --chown=node:node .eslintrc.js ./.eslintrc.js
+COPY --chown=node:node cypress.config.ts ./cypress.config.ts
+COPY --chown=node:node remix.config.js ./remix.config.js
+COPY --chown=node:node remix.env.d.ts ./remix.env.d.ts
+COPY --chown=node:node tailwind.config.ts ./tailwind.config.ts
+COPY --chown=node:node tsconfig.json ./tsconfig.json
+COPY --chown=node:node vitest.config.ts ./vitest.config.ts
 
-WORKDIR /myapp
-
-COPY --from=deps /myapp/node_modules /myapp/node_modules
-
-ADD package.json pnpm-lock.yaml .npmrc ./
-ADD supervisor.conf ./
-RUN pnpm prune --production
-
-# Build the app
-FROM base as build
-
-WORKDIR /myapp
-
-COPY --from=deps /myapp/node_modules /myapp/node_modules
-
-ADD prisma .
-RUN pnpx prisma generate
-
-ADD . .
+RUN pnpm exec prisma generate
 RUN pnpm run build
 
-# build the prod base with chromium browser
-FROM base as prod-base
+FROM base as release
 
-WORKDIR /myapp
+WORKDIR /nmbapp
 
-# Install Google Chrome Stable and fonts
-# Note: this installs the necessary libs to make the browser work with Puppeteer.
-RUN apt-get update && apt-get install gnupg wget -y && \
-  wget --quiet --output-document=- https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /etc/apt/trusted.gpg.d/google-archive.gpg && \
-  sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' && \
-  apt-get update && \
-  apt-get install google-chrome-stable -y --no-install-recommends && \
-  rm -rf /var/lib/apt/lists/*
+RUN chown node:node ./
+USER node
 
-# finally, build the production image with minimal footprint
-FROM prod-base
+COPY --chown=node:node --from=builder /nmbapp/botapp /nmbapp/botapp
+COPY --chown=node:node --from=builder /nmbapp/build /nmbapp/build
+
+COPY --chown=node:node prisma ./prisma
+COPY --chown=node:node public ./public
+COPY --chown=node:node storage ./storage
+COPY --chown=node:node package.json ./package.json
+
+# install prod deps
+RUN pnpm install
+
+COPY --chown=node:node start_remix.sh ./start_remix.sh
+COPY --chown=node:node start_botapp.sh ./start_botapp.sh
+COPY --chown=node:node supervisor.conf ./supervisor.conf
 
 ENV DATABASE_URL=file:/data/sqlite.db
 ENV PORT="8080"
 ENV NODE_ENV="production"
 
-# add shortcut for connecting to database CLI
-RUN echo "#!/bin/sh\nset -x\nsqlite3 \$DATABASE_URL" > /usr/local/bin/database-cli && chmod +x /usr/local/bin/database-cli
+RUN chmod 755 /nmbapp/storage
 
-WORKDIR /myapp
+# TODO: remove all unnecessary installed changes
 
-COPY --from=production-deps /myapp/node_modules /myapp/node_modules
-COPY --from=production-deps /myapp/supervisor.conf /myapp/supervisor.conf
-
-# this doesn't work with PNPM - the actual generated files are in a different location
-# e.g. `node_modules/.pnpm/@prisma+client@4.12.0_prisma@4.12.0/node_modules/.prisma`
-#COPY --from=build /myapp/node_modules/.prisma /myapp/node_modules/.prisma
-
-COPY --from=build /myapp/build /myapp/build
-COPY --from=build /myapp/public /myapp/public
-COPY --from=build /myapp/package.json /myapp/package.json
-COPY --from=build /myapp/start_remix.sh /myapp/start_remix.sh
-COPY --from=build /myapp/start_botapp.sh /myapp/start_botapp.sh
-COPY --from=build /myapp/prisma /myapp/prisma
-COPY --from=build /myapp/botapp /myapp/botapp
-
-# set up storage
-COPY --from=build /myapp/storage /myapp/storage
-RUN chmod 755 /myapp/storage
-
-# generate Prisma stuff
-RUN pnpx prisma generate
-
-RUN chown node:node ./
-
-ENTRYPOINT supervisord -c /myapp/supervisor.conf
+ENTRYPOINT supervisord -c /nmbapp/supervisor.conf

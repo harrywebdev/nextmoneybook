@@ -73,6 +73,7 @@ dependencies:
   md5: 2.3.0
   neat-csv: 7.0.0
   node-schedule: 2.1.1
+  prisma: 4.12.0
   puppeteer: 19.8.5_typescript@4.9.5
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
@@ -111,7 +112,6 @@ devDependencies:
   postcss: 8.4.21
   prettier: 2.8.4
   prettier-plugin-tailwindcss: 0.2.7_prettier@2.8.4
-  prisma: 4.12.0
   start-server-and-test: 1.15.4
   tailwindcss: 3.3.1_aesdjsunmf4wiehhujt67my7tu
   ts-node: 10.9.1_o6avl3oodj6mwqsx3rm2wfkgv4
@@ -2349,6 +2349,7 @@ packages:
   /@prisma/engines/4.12.0:
     resolution: {integrity: sha512-0alKtnxhNB5hYU+ymESBlGI4b9XrGGSdv7Ud+8TE/fBNOEhIud0XQsAR+TrvUZgS4na5czubiMsODw0TUrgkIA==}
     requiresBuild: true
+    dev: false
 
   /@puppeteer/browsers/0.4.0_typescript@4.9.5:
     resolution: {integrity: sha512-3iB5pWn9Sr55PKKwqFWSWjLsTKCOEhKNI+uV3BZesgXuA3IhsX8I3hW0HI+3ksMIPkh2mVYzKSpvgq3oicjG2Q==}
@@ -8309,6 +8310,7 @@ packages:
     requiresBuild: true
     dependencies:
       '@prisma/engines': 4.12.0
+    dev: false
 
   /process-nextick-args/2.0.1:
     resolution: {integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==}

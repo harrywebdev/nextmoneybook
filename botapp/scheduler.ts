@@ -63,4 +63,6 @@ export default function scheduler(bot: Telegraf) {
       console.error(error);
     }
   }
+
+  console.log("Scheduler started. ⏱");
 }
