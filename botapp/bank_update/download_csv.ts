@@ -2,13 +2,7 @@ import type { HTTPRequest, HTTPResponse, Page } from "puppeteer";
 import path from "path";
 import { checkExistsWithTimeout, moveFile } from "./pptr_helpers";
 import convertStatementEncoding from "./convert_statement_encoding";
-
-function getStoragePath(appendPath: string = "") {
-  let storagePath = process.env.STORAGE_PATH || "/data";
-  storagePath = storagePath[0] === "/" ? storagePath : `/${storagePath}`;
-
-  return path.join(__dirname, `../..${storagePath}/`, appendPath);
-}
+import { getStoragePath } from "../utils/get_storage_path";
 
 export default async function downloadCsv(
   page: Page,

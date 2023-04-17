@@ -1,10 +1,10 @@
 import fs from "fs";
-import path from "path";
 import type { FileInStorage } from "./types";
+import { getStoragePath } from "../utils/get_storage_path";
 
 export const getStatementsInStorage = (): Promise<FileInStorage[]> => {
   return new Promise((resolve, reject) => {
-    fs.readdir(path.join(__dirname, "../../storage"), (err, files) => {
+    fs.readdir(getStoragePath(), (err, files) => {
       if (err) reject(err);
 
       resolve(
@@ -15,7 +15,7 @@ export const getStatementsInStorage = (): Promise<FileInStorage[]> => {
           .map((file) => {
             return {
               filename: file,
-              fullPath: path.join(__dirname, "../../storage", file),
+              fullPath: getStoragePath(file),
             };
           })
       );
