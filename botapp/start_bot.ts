@@ -32,12 +32,10 @@ bot.help((ctx: Context) => {
 
 updateCommand(bot, authCheck);
 
-bot
-  .launch({})
-  .then(() => {
-    console.log("Bot started");
-  })
-  .catch((err: Error) => console.error(err));
+bot.launch({}).catch((err: Error) => {
+  console.error(err);
+  process.exit(1); // restart
+});
 
 // Enable graceful stop
 process.once("SIGINT", () => bot.stop("SIGINT"));
