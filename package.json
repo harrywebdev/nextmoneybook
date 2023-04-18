@@ -44,6 +44,8 @@
     "bcryptjs": "^2.4.3",
     "csv-parser": "^3.0.0",
     "dotenv": "^16.0.3",
+    "flowbite": "^1.6.5",
+    "flowbite-react": "^0.4.3",
     "iconv": "^3.0.1",
     "isbot": "^3.6.8",
     "md5": "^2.3.0",

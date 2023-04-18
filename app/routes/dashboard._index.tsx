@@ -12,7 +12,7 @@ export async function loader({ request, params }: LoaderArgs) {
 export default function DashboardIndexPage() {
   return (
     <Layout>
-      <p>hello, it's me</p>
+      <p>Fancy dashboard here</p>
     </Layout>
   );
 }
