@@ -1,8 +1,7 @@
 import React from "react";
-import { Link } from "@remix-run/react";
 import { requireUserId } from "~/session.server";
 import { json, LoaderArgs } from "@remix-run/node";
-import Navbar from "~/components/Navbar";
+import Layout from "~/components/Layout";
 
 export async function loader({ request, params }: LoaderArgs) {
   await requireUserId(request);
@@ -12,8 +11,8 @@ export async function loader({ request, params }: LoaderArgs) {
 
 export default function DashboardIndexPage() {
   return (
-    <>
-      <Navbar />
-    </>
+    <Layout>
+      <p>hello, it's me</p>
+    </Layout>
   );
 }
