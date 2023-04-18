@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import Navbar from "~/components/Navbar";
 import Sidebar from "~/components/Sidebar";
+import {SidebarProvider} from "~/components/SidebarContext";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -8,7 +9,7 @@ type LayoutProps = {
 
 const Layout: FC<LayoutProps> = ({ children }) => {
   return (
-    <>
+    <SidebarProvider>
       <Navbar />
       <div className={"h-screen flex pt-16 overflow-hidden bg-gray-50 dark:bg-gray-900"}>
         <Sidebar />
@@ -22,7 +23,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
           </main>
         </div>
       </div>
-    </>
+    </SidebarProvider>
   );
 };
 
