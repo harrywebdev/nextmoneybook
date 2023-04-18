@@ -4,6 +4,7 @@ import {
   ArrowRightOnRectangleIcon,
   BanknotesIcon,
   ChartPieIcon,
+  CreditCardIcon,
   CurrencyDollarIcon,
 } from "@heroicons/react/24/solid";
 import { Navbar as FlowbiteNavbar } from "flowbite-react";
@@ -42,12 +43,22 @@ const Navbar: FC<NavbarProps> = () => {
         </FlowbiteNavbar.Link>
         <FlowbiteNavbar.Link
           as={NavLink}
-          to="/transactions"
-          active={getActive("transactions")}
+          to="/transactions/account"
+          active={getActive("account")}
         >
           <span className={"flex items-center justify-start"}>
             <BanknotesIcon className={"w-6 h-6"} />
-            <span className="ml-2">Transactions</span>
+            <span className="ml-2">Account</span>
+          </span>
+        </FlowbiteNavbar.Link>
+        <FlowbiteNavbar.Link
+          as={NavLink}
+          to="/transactions/credit-card"
+          active={getActive("credit-card")}
+        >
+          <span className={"flex items-center justify-start"}>
+            <CreditCardIcon className={"w-6 h-6"} />
+            <span className="ml-2">Credit Card</span>
           </span>
         </FlowbiteNavbar.Link>
         <FlowbiteNavbar.Link as={NavLink} to="/logout">

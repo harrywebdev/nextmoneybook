@@ -9,9 +9,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
   return (
     <>
       <Navbar />
-      <main
-        className={"h-screen flex overflow-hidden bg-gray-50 dark:bg-gray-900"}
-      >
+      <main className={"h-screen bg-gray-50 dark:bg-gray-900"}>
         <div className={"p-2"}>{children}</div>
       </main>
     </>
